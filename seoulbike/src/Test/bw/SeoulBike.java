@@ -117,7 +117,7 @@ public class SeoulBike {
 		System.out.println("[회원가입]");
 		System.out.print("아이디: ");
 		user.setUserId(scanner.nextLine());
-
+		checkId(user);
 		System.out.print("비밀번호: ");
 		user.setUserPassword(scanner.nextLine());
 		System.out.print("이메일: ");
@@ -496,6 +496,33 @@ public class SeoulBike {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			exit();
+		}
+
+	}
+
+	private void checkId(Users user) {
+		// 따릉이 대여소 리스트로 뽑기
+		ArrayList<String> list = new ArrayList<>();
+		try {
+			String sql = "" + "SELECT USER_ID " + "FROM USERS ";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				list.add(rs.getString("USER_ID"));
+			}
+			rs.close();
+			pstmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			exit();
+		}
+
+		while (list.contains(user.getUserId())) {
+
+			System.out.println("중복된 ID 입니다. 다른 ID를 입력해주세요");
+			System.out.println("ID : ");
+			user.setUserId(scanner.nextLine());
+
 		}
 
 	}
