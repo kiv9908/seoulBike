@@ -15,6 +15,15 @@ public class SeoulBike {
 	private String rent_place;
 	private String rent_bike;
 
+	final String driver = "oracle.jdbc.driver.OracleDriver";
+	final String url = "jdbc:oracle:thin:@localhost:1521:xe";
+	final String userid = "testuser";
+	final String passwd = "test1234";
+//	final String driver = "oracle.jdbc.driver.OracleDriver";
+//	final String url = "jdbc:oracle:thin:@eyc526ouwzdk9qci_medium?TNS_ADMIN=D:/Wallet_EYC526OUWZDK9QCI";
+//	final String userid = "ADMIN";
+//	final String passwd = "BBBjjang8945";
+
 	public String getloginId() {
 		return loginId;
 	}
@@ -27,10 +36,10 @@ public class SeoulBike {
 	public SeoulBike() {
 		try {
 			// JDBC Driver 등록
-			Class.forName("oracle.jdbc.OracleDriver");
+			Class.forName(driver);
 
 			// 연결하기
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "testuser", "test1234");
+			conn = DriverManager.getConnection(url, userid, passwd);
 		} catch (Exception e) {
 			e.printStackTrace();
 			exit();
@@ -59,7 +68,6 @@ public class SeoulBike {
 		System.out.println("[로그인]");
 		System.out.print("아이디: ");
 		users.setUserId(scanner.nextLine());
-		System.out.println(users.getUserId());
 		System.out.print("비밀번호: ");
 		users.setUserPassword(scanner.nextLine());
 		System.out.println("-----------------------------------------------------------------------");
@@ -199,7 +207,7 @@ public class SeoulBike {
 			pstmt.setString(2, board.getRental_place_id());
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				System.out.println(rs.getInt("BIKE_ID"));
+				System.out.print(rs.getInt("BIKE_ID") + " ");
 			}
 			rs.close();
 			pstmt.close();
@@ -208,7 +216,7 @@ public class SeoulBike {
 			exit();
 		}
 		// bike_id로 bike state 0로 update, history insert
-		System.out.println("빌리고자 하는 따릉이 ID를 입력해주세요.");
+		System.out.println("중에서 빌리고자 하는 따릉이 ID를 입력해주세요.");
 		board.setBike_id(scanner.nextLine());
 
 		try {
@@ -224,12 +232,13 @@ public class SeoulBike {
 		}
 
 		try {
-			String sql = "" + "INSERT INTO RENTAL_LIST (BIKE_ID, RENTAL_PLACE_ID,START_TIME, USER_ID,RENTAL_NO) "
-					+ "VALUES ( ?, ?, SYSDATE,?,SEQ_RENTNO.NEXTVAL)";
+			String sql = "" + "INSERT INTO RENTAL_LIST (USER_ID, BIKE_ID, RENTAL_PLACE_ID, START_TIME, RENTAL_NO) "
+					+ "VALUES ( ?, ?, ?, SYSDATE,SEQ_RENTNO.NEXTVAL)";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, board.getBike_id());
-			pstmt.setString(2, board.getRental_place_id());
-			pstmt.setString(3, board.getUser_id());
+			pstmt.setString(1, board.getUser_id());
+			pstmt.setString(2, board.getBike_id());
+			pstmt.setString(3, board.getRental_place_id());
+
 			pstmt.executeUpdate();
 			pstmt.close();
 		} catch (Exception e) {
