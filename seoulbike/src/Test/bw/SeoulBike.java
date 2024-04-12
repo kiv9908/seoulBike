@@ -19,10 +19,6 @@ public class SeoulBike {
 	final String url = "jdbc:oracle:thin:@localhost:1521:xe";
 	final String userid = "testuser";
 	final String passwd = "test1234";
-//	final String driver = "oracle.jdbc.driver.OracleDriver";
-//	final String url = "jdbc:oracle:thin:@eyc526ouwzdk9qci_medium?TNS_ADMIN=D:/Wallet_EYC526OUWZDK9QCI";
-//	final String userid = "ADMIN";
-//	final String passwd = "BBBjjang8945";
 
 	public String getloginId() {
 		return loginId;
